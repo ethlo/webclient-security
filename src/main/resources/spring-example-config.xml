@@ -1,0 +1,12 @@
+<beans>
+
+	<bean id="webClientSecurityFilter" class="com.ethlo.web.security.WebClientSecurityFilter">
+		<property name="plugins">
+			<list>
+				<bean class="com.ethlo.web.security.WebClientSecurityFilterPluginCsrf" />
+				<bean class="com.ethlo.web.security.WebClientSecurityFilterPluginClickHiJacking" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
