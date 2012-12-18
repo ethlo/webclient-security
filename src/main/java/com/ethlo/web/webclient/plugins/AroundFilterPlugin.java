@@ -25,13 +25,13 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 	@Override
 	public final boolean filterBefore(HttpServletRequest request, HttpServletResponse response)
 	{
-		if (matcher.matches(request))
+		if (matcher == null || matcher.matches(request))
 		{
 			return this.doFilterBefore(request, response);
 		}
 		else
 		{
-			logger.debug("No match for filter " + this.getClass().getSimpleName() + " for request " + request.getRequestURI());
+			logger.info("No match for filter " + this.getClass().getSimpleName() + " for request " + request.getRequestURI());
 		}
 		return true;
 	}
@@ -39,7 +39,7 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 	@Override
 	public final void filterAfter(HttpServletRequest request, HttpServletResponse response)
 	{
-		if (matcher.matches(request))
+		if (matcher == null || matcher.matches(request))
 		{
 			this.doFilterAfter(request, response);
 		}
@@ -60,7 +60,7 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 
 	public UserAgent getUserAgent(HttpServletRequest request)
 	{
-		return UserAgentRequestMatcher.getUserAgentParser().parse(request.getHeader("User-Agent"));
+		return UserAgentRequestMatcher.getUserAgent(request);
 	}
 
 	protected VersionNumber getHttpVersion(HttpServletRequest request)

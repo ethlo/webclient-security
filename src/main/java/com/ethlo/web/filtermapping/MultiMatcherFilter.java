@@ -1,6 +1,7 @@
 package com.ethlo.web.filtermapping;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -48,11 +49,11 @@ public class MultiMatcherFilter implements Filter
 		}
 	}
 
-	public void setPlugins(List<FilterPlugin> plugins)
+	public void setPlugins(FilterPlugin... plugins)
 	{
-		this.plugins = plugins;
+		this.plugins = Arrays.asList(plugins);
 	}
 
 	public void destroy(){}
-	public void init(FilterConfig arg0) throws ServletException{}
+	public void init(FilterConfig filterConfig) throws ServletException{}
 }

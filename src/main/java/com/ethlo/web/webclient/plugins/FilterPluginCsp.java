@@ -25,7 +25,7 @@ public class FilterPluginCsp extends BeforeFilterPlugin
 	public final static String CSP_REPORT_ONLY_HEADER = "Content-Security-Policy-Report-Only";
 	public final static String CSP_REPORT_ONLY_LEGACY_HEADER = "X-Content-Security-Policy-Report-Only";
 	
-	private boolean addLegacyHeader = true;
+	private boolean addLegacyHeader = false;
 	private boolean reportOnly = false;
 	private String policy;
 	
@@ -36,11 +36,13 @@ public class FilterPluginCsp extends BeforeFilterPlugin
 
 		response.addHeader(reportOnly ? CSP_REPORT_ONLY_HEADER : CSP_HEADER, policy);
 		
+		/*
 		if(userAgent.getFamily() == UserAgentFamily.IE)
 		{
 			response.addHeader("X-Xss-Protection", "1; mode=block");	
 		}
-		else if (isWebKit(userAgent) && !reportOnly && addLegacyHeader)
+		*/
+		if (isWebKit(userAgent) && !reportOnly && addLegacyHeader)
 		{
 			response.addHeader(CSP_LEGACY_WEBKIT_HEADER, policy);
 		}
@@ -65,5 +67,15 @@ public class FilterPluginCsp extends BeforeFilterPlugin
 	public void setReportOnly(boolean reportOnly)
 	{
 		this.reportOnly = reportOnly;
+	}
+	
+	public void setAddLegacyHeader(boolean b)
+	{
+		this.addLegacyHeader = b;
+	}
+
+	public String getPolicy()
+	{
+		return this.policy;
 	}
 }

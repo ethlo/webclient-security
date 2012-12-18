@@ -1,39 +1,37 @@
 package com.ethlo.web.filtermapping;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.web.util.RequestMatcher;
 
 import net.sf.uadetector.UserAgent;
 import net.sf.uadetector.UserAgentFamily;
 import net.sf.uadetector.UserAgentStringParser;
 import net.sf.uadetector.service.UADetectorServiceFactory;
 
-public class UserAgentRequestMatcher implements RequestMatcher, InitializingBean
+import org.springframework.security.web.util.RequestMatcher;
+
+/**
+ * @author Morten Haraldsen
+ */
+public class UserAgentRequestMatcher implements RequestMatcher
 {
 	private final static UserAgentStringParser userAgentParser = UADetectorServiceFactory.getResourceModuleParser();
-
-	private List<String> userAgentIncludes;
-	private List<String> userAgentExcludes;
-
-	private List<UserAgentFamily> excludedUserAgentEnums;
-	private List<UserAgentFamily> includedUserAgentEnums;
+	private Set<UserAgentFamily> includedUserAgentEnums;
 	
-	public UserAgent getUserAgent(HttpServletRequest request)
+	public static UserAgent getUserAgent(HttpServletRequest request)
 	{
-		return userAgentParser.parse(request.getHeader("User-Agent"));
+		final String userAgentStr = request.getHeader("User-Agent");
+		return userAgentParser.parse(userAgentStr != null ? userAgentStr : "");
 	}
 	
-	private List<UserAgentFamily> createUaList(List<String> uaNames)
+	private Set<UserAgentFamily> createUaList(String[] uaNames)
 	{
-		final List<UserAgentFamily> retVal = new ArrayList<>(uaNames.size());
-		for (String s : uaNames)
+		final Set<UserAgentFamily> retVal = new HashSet<>(uaNames.length);
+		for (String name : uaNames)
 		{
-			retVal.add(getUserAgentEnum(s));
+			retVal.add(getUserAgentEnum(name));
 		}
 		return retVal;
 	}
@@ -42,46 +40,20 @@ public class UserAgentRequestMatcher implements RequestMatcher, InitializingBean
 	{
 		 return UserAgentFamily.valueOf(userAgentStr.toUpperCase());
 	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception
-	{
-		if (this.userAgentExcludes != null)
-		{
-			this.excludedUserAgentEnums = createUaList(this.userAgentExcludes);
-		}
-		
-		if (this.userAgentIncludes != null)
-		{
-			this.includedUserAgentEnums = createUaList(this.userAgentIncludes);
-		}
-	}
 
 	@Override
 	public boolean matches(HttpServletRequest request)
 	{
-		final UserAgent userAgent = getUserAgent(request);
-		if (excludedUserAgentEnums != null)
-		{
-			if (this.excludedUserAgentEnums.contains(userAgent.getFamily()))
-			{
-				return false;
-			}
-		}
-		
-		if (includedUserAgentEnums != null)
-		{
-			if (this.includedUserAgentEnums.contains(userAgent.getFamily()))
-			{
-				return true;
-			}
-		}
-		
-		return excludedUserAgentEnums != null && includedUserAgentEnums == null;	
+		final UserAgent userAgent = getUserAgent(request);				
+		return this.includedUserAgentEnums.contains(userAgent.getFamily());
 	}
-	
-	public static UserAgentStringParser getUserAgentParser()
+
+	public void setUserAgentIncludes(String... userAgentIncludes)
 	{
-		return userAgentParser;
+		this.includedUserAgentEnums = null;
+		if (userAgentIncludes != null)
+		{
+			this.includedUserAgentEnums = createUaList(userAgentIncludes);
+		}
 	}
 }
