@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.web.util.RequestMatcher;
 
 /**
@@ -13,6 +15,8 @@ import org.springframework.security.web.util.RequestMatcher;
  */
 public class RequestMultiMatcher implements RequestMatcher
 {
+	private static final Logger logger = LoggerFactory.getLogger(RequestMultiMatcher.class);
+	
 	private List<RequestMatcher> includes;
 	private List<RequestMatcher> excludes;
 	private MatcherPolicy includesPolicy = MatcherPolicy.ALL;
@@ -47,7 +51,7 @@ public class RequestMultiMatcher implements RequestMatcher
 				{
 					if (matcher.matches(request))
 					{
-						System.out.println(request.getRequestURI() + " excluded due to matcher " + matcher);
+						logger.info("{} excluded due to matcher {}", request.getRequestURI(), matcher);
 						return false;
 					}
 				}
@@ -57,12 +61,12 @@ public class RequestMultiMatcher implements RequestMatcher
 				int matches = 0;
 				for (RequestMatcher matcher : excludes)
 				{
-					if (! matcher.matches(request))
+					if (matcher.matches(request))
 					{
 						matches++;
 					}
 				}
-				return matches == excludes.size() - 1;
+				return matches != excludes.size();
 			}
 		}
 		
@@ -74,7 +78,7 @@ public class RequestMultiMatcher implements RequestMatcher
 				{
 					if (! matcher.matches(request))
 					{
-						System.out.println(request.getRequestURI() + " not included due to matcher " + matcher);
+						logger.info("{} not included due to matcher {}", request.getRequestURI(), matcher);
 						return false;
 					}
 				}
@@ -82,15 +86,14 @@ public class RequestMultiMatcher implements RequestMatcher
 			}
 			else if (this.includesPolicy == MatcherPolicy.ANY)
 			{
-				int matches = 0;
 				for (RequestMatcher matcher : includes)
 				{
-					if (! matcher.matches(request))
+					if (matcher.matches(request))
 					{
-						matches++;
+						return true;
 					}
 				}
-				return matches == includes.size() - 1;
+				return false;
 			}
 		}
 		
