@@ -39,7 +39,7 @@ Spring:
 						<bean class="com.ethlo.web.filtermapping.matchers.RequestMultiMatcher">
 							<property name="includes">
 								<bean class="com.ethlo.web.filtermapping.matchers.AntPathRequestMatcher">
-									<constructor-arg value="/api/**"
+									<constructor-arg value="/api/**" />
 								</bean>		
 							</property>
 							<property name="excludes">
