@@ -68,8 +68,10 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 		if (protocol != null)
 		{
 			final String[] protocolAndVersion = protocol.split("/");
-			final String[] versionNumbers = protocolAndVersion[1].split(".");
-			return new VersionNumber(Integer.parseInt(versionNumbers[0]), Integer.parseInt(versionNumbers[1]));
+			final String[] versionNumbers = protocolAndVersion[1].split("\\.");
+			final int major = Integer.parseInt(versionNumbers[0]);
+			final int minor = Integer.parseInt(versionNumbers[1]);
+			return new VersionNumber(major, minor);
 		}
 		return VersionNumber.UNDETERMINED;
 	}
