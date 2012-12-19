@@ -22,7 +22,7 @@ The security plugins include:
 # Examples
 
 Spring:
-```
+```xml
 <bean id="webClientSecurityFilter" class="com.ethlo.web.filtermapping.MultiMatcherFilter">
   	<property name="plugins">
 			<list>
