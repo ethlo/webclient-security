@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.ethlo.web.filtermapping.matchers.RequestMultiMatcher;
+import com.ethlo.web.filtermapping.matchers.UserAgentTypeRequestMatcher;
 import com.ethlo.web.webclient.plugins.FilterPluginCsp;
 /**
  * 

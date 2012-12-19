@@ -7,11 +7,10 @@ import net.sf.uadetector.UserAgent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.web.util.RequestMatcher;
-import org.springframework.util.StringUtils;
 
-import com.ethlo.web.filtermapping.UserAgentRequestMatcher;
 import com.ethlo.web.filtermapping.VersionNumber;
+import com.ethlo.web.filtermapping.matchers.RequestMatcher;
+import com.ethlo.web.filtermapping.matchers.UserAgentRequestMatcher;
 
 /**
  * 
@@ -68,7 +67,8 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 		final String protocol = request.getProtocol();
 		if (protocol != null)
 		{
-			final String[] versionNumbers = StringUtils.split(StringUtils.split(protocol, "/")[1], ".");
+			final String[] protocolAndVersion = protocol.split("/");
+			final String[] versionNumbers = protocolAndVersion[1].split(".");
 			return new VersionNumber(Integer.parseInt(versionNumbers[0]), Integer.parseInt(versionNumbers[1]));
 		}
 		return VersionNumber.UNDETERMINED;

@@ -3,15 +3,15 @@ package com.ethlo.web.filtermapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Never matches any request
+ * Always matches any request
  * 
  * @author Morten Haraldsen
  */
-public class NeverRequestMatcher implements RequestMatcher
+public class AnyRequestMatcher implements RequestMatcher
 {
 	@Override
 	public boolean matches(HttpServletRequest request)
 	{
-		return false;
+		return true;
 	}
 }

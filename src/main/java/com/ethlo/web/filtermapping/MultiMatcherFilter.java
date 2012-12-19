@@ -13,9 +13,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.web.firewall.DefaultHttpFirewall;
-import org.springframework.security.web.firewall.FirewalledRequest;
-
 import com.ethlo.web.util.ImmutableHttpServletResponse;
 import com.ethlo.web.webclient.plugins.FilterPlugin;
 
@@ -30,7 +27,7 @@ public class MultiMatcherFilter implements Filter
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
 	{
-		final FirewalledRequest request = new DefaultHttpFirewall().getFirewalledRequest((HttpServletRequest) req);
+		final HttpServletRequest request = (HttpServletRequest) req;
 		final HttpServletResponse response = (HttpServletResponse) res;
 		for (FilterPlugin plugin : plugins)
 		{

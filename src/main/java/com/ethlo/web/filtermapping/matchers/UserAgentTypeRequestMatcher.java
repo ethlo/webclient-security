@@ -1,4 +1,4 @@
-package com.ethlo.web.filtermapping;
+package com.ethlo.web.filtermapping.matchers;
 
 import java.util.HashSet;
 import java.util.Set;

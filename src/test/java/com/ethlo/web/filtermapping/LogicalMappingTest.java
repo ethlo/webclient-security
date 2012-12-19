@@ -4,10 +4,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.web.util.AnyRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
 
-import com.ethlo.web.filtermapping.RequestMultiMatcher.MatcherPolicy;
+import com.ethlo.web.filtermapping.matchers.AnyRequestMatcher;
+import com.ethlo.web.filtermapping.matchers.NeverRequestMatcher;
+import com.ethlo.web.filtermapping.matchers.RequestMatcher;
+import com.ethlo.web.filtermapping.matchers.RequestMultiMatcher;
+import com.ethlo.web.filtermapping.matchers.RequestMultiMatcher.MatcherPolicy;
 
 /**
  * 

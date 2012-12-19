@@ -1,6 +1,7 @@
-package com.ethlo.web.filtermapping;
+package com.ethlo.web.filtermapping.matchers;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * Never matches any request
