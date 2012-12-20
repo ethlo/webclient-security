@@ -50,7 +50,7 @@ public class RequestMultiMatcher implements RequestMatcher
 				{
 					if (matcher.matches(request))
 					{
-						logger.info("{} excluded due to matcher {}", request.getRequestURI(), matcher);
+						logger.debug("{} excluded due to matcher {}", request.getRequestURI(), matcher);
 						return false;
 					}
 				}
@@ -77,7 +77,7 @@ public class RequestMultiMatcher implements RequestMatcher
 				{
 					if (! matcher.matches(request))
 					{
-						logger.info("{} not included due to matcher {}", request.getRequestURI(), matcher);
+						logger.debug("{} not included due to matcher {}", request.getRequestURI(), matcher);
 						return false;
 					}
 				}

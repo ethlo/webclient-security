@@ -30,7 +30,7 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 		}
 		else
 		{
-			logger.info("No match for filter " + this.getClass().getSimpleName() + " for request " + request.getRequestURI());
+			logger.debug("No match for filter " + this.getClass().getSimpleName() + " for request " + request.getRequestURI());
 		}
 		return true;
 	}
