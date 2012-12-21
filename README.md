@@ -7,21 +7,32 @@ Request parsers include:
 * URL (regex, ant)
 * User-agent (name, version)
 * User-Agent type (browser, mobile-browser, etc)
-... and it is very easy to add your own!
+* ... and it is very easy to add your own!
 
 The security plugins include:
 * Anti-CSRF (token session wide)
 * CSP (Content-Security-Policy)
 * Anti click hi-jacking
-... and again it is very easy to add your own!
+* ...and again it is very easy to add your own!
 
 # Build status
 
 [![Build Status](https://travis-ci.org/ethlo/webclient-security.png?branch=master)](https://travis-ci.org/ethlo/webclient-security)
 
-# Examples
+# Maven repository
+http://ethlo.com/maven
 
-Spring:
+# Maven artifact
+```xml
+<dependency>
+	<groupId>com.ethlo.web</groupId>
+	<artifactId>webclient-security</artifactId>
+	<version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+# Examples
+Spring example config:
 ```xml
 <bean id="webClientSecurityFilter" class="com.ethlo.web.filtermapping.MultiMatcherFilter">
   	<property name="plugins">
