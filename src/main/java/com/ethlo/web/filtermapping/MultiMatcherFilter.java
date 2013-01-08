@@ -13,6 +13,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ethlo.web.util.ImmutableHttpServletResponse;
 import com.ethlo.web.webclient.plugins.FilterPlugin;
 
@@ -22,6 +25,8 @@ import com.ethlo.web.webclient.plugins.FilterPlugin;
  */
 public class MultiMatcherFilter implements Filter
 {
+	private final static Logger logger = LoggerFactory.getLogger(MultiMatcherFilter.class);
+	
 	private List<FilterPlugin> plugins;
 	
 	@Override
@@ -31,9 +36,11 @@ public class MultiMatcherFilter implements Filter
 		final HttpServletResponse response = (HttpServletResponse) res;
 		for (FilterPlugin plugin : plugins)
 		{
-			if (! plugin.filterBefore(request, response))
+			final boolean evalResult = plugin.filterBefore(request, response);
+			if (! evalResult)
 			{
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				logger.debug("Skipping further processing due to false response from plugin " + plugin);
+				return;
 			}
 		}
 		

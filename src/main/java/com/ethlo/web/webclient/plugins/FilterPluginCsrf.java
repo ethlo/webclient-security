@@ -1,5 +1,6 @@
 package com.ethlo.web.webclient.plugins;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.AccessDeniedException;
 import java.security.SecureRandom;
@@ -25,41 +26,37 @@ public class FilterPluginCsrf extends BeforeFilterPlugin
 	public static final String CSRF_HEADER_NAME = "X-CSRF";
 	public static final String CSRF_ACTIVE_ATTR_NAME = "_CSRF_PROTECTION_ACTIVE";
 	
-	private boolean conditional = false;
-	
 	private SecureRandom random = new SecureRandom();
 	
 	@Override
-	public boolean doFilterBefore(HttpServletRequest request, HttpServletResponse response)
+	public boolean doFilterBefore(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		final HttpSession session = request.getSession(true);
 		final boolean hasActivatorReqParam = request.getParameter(CSRF_ACTIVE_ATTR_NAME) != null;
-		if (session != null && (!conditional || hasActivatorReqParam))
+		String sessionToken = (String) session.getAttribute(CSRF_PROTECTION_ATTR_NAME);
+		if (sessionToken == null && hasActivatorReqParam)
 		{
-			String sessionToken = (String) session.getAttribute(CSRF_PROTECTION_ATTR_NAME);
-			if (sessionToken == null)
-			{
-				sessionToken = generateToken();
-				session.setAttribute(CSRF_PROTECTION_ATTR_NAME, sessionToken);
-				logger.info("Generated new session-wide CSRF protection token");
-			}
-			else
-			{
-				final String headerToken = request.getHeader(CSRF_HEADER_NAME);
-				if (headerToken == null)
-				{
-					logger.info("CSRF header token not found");
-					return false;
-				}
-				else if (! sessionToken.equals(headerToken))
-				{
-					logger.info("CSRF header token {} did not match session token", headerToken);
-					return false;
-				}
-			}
-			
-			request.setAttribute(CSRF_PROTECTION_ATTR_NAME, sessionToken);
+			sessionToken = generateToken();
+			session.setAttribute(CSRF_PROTECTION_ATTR_NAME, sessionToken);
+			logger.info("Generated new session-wide CSRF protection token");
 		}
+		else
+		{
+			final String headerToken = request.getHeader(CSRF_HEADER_NAME);
+			if (headerToken == null)
+			{
+				logger.info("CSRF header token not found");
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return false;
+			}
+			else if (! sessionToken.equals(headerToken))
+			{
+				logger.warn("CSRF header token {} did not match session token", headerToken);
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Possible cross site forgery attempt");
+				return false;
+			}
+		}
+		request.setAttribute(CSRF_PROTECTION_ATTR_NAME, sessionToken);
 		return true;
 	}
 	
@@ -86,10 +83,5 @@ public class FilterPluginCsrf extends BeforeFilterPlugin
 		{
 			super("Invalid cross-site requst forgery token");
 		}
-	}
-	
-	public void setConditional(boolean b)
-	{
-		this.conditional = b;
 	}
 }

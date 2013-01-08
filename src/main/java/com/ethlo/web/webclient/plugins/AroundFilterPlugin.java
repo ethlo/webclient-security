@@ -1,5 +1,6 @@
 package com.ethlo.web.webclient.plugins;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,7 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 	private Set<HttpMethod> methods;
 	
 	@Override
-	public final boolean filterBefore(HttpServletRequest request, HttpServletResponse response)
+	public final boolean filterBefore(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		if (matches(request))
 		{
@@ -52,7 +53,7 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 	}
 
 	@Override
-	public final void filterAfter(HttpServletRequest request, HttpServletResponse response)
+	public final void filterAfter(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		if (matches(request))
 		{
@@ -69,9 +70,9 @@ public abstract class AroundFilterPlugin implements FilterPlugin
 		this.matcher = matcher;
 	}
 
-	protected abstract boolean doFilterBefore(HttpServletRequest request, HttpServletResponse response);
+	protected abstract boolean doFilterBefore(HttpServletRequest request, HttpServletResponse response) throws IOException;
 	
-	protected abstract void doFilterAfter(HttpServletRequest request, HttpServletResponse response);
+	protected abstract void doFilterAfter(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 	public UserAgent getUserAgent(HttpServletRequest request)
 	{

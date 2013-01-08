@@ -43,6 +43,6 @@ public abstract class BaseRequestMatcher implements RequestMatcher
 		{
 			return path.substring(index + 1);
 		}
-		return null;
+		return "";
 	}
 }
