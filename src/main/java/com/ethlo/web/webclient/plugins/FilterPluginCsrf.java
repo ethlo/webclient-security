@@ -40,19 +40,19 @@ public class FilterPluginCsrf extends BeforeFilterPlugin
 			session.setAttribute(CSRF_PROTECTION_ATTR_NAME, sessionToken);
 			logger.info("Generated new session-wide CSRF protection token");
 		}
-		else
+		else if (sessionToken != null)
 		{
 			final String headerToken = request.getHeader(CSRF_HEADER_NAME);
 			if (headerToken == null)
 			{
 				logger.info("CSRF header token not found");
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Possible cross site forgery attempt. Missing CSRF request token");
 				return false;
 			}
 			else if (! sessionToken.equals(headerToken))
 			{
 				logger.warn("CSRF header token {} did not match session token", headerToken);
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Possible cross site forgery attempt");
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Possible cross site forgery attempt. Invalid CSRF request token");
 				return false;
 			}
 		}
