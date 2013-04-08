@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Orders list</title>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/webgui/img/ssp_32_w.ico" />
+    <link rel="stylesheet" type="text/css" href="/webgui/css/stdcss_519143f1cf64a872cff3a00493ca852d.css" />
+  </head>
+  <body id="main" class="yui-skin-sam">
+    <div id="pageLoadingInfo" style="padding-top:4px; padding-left:5px;">
+      <img src="/webgui/img/kezzler_logo.gif" height="56" width="142" alt="Kezzler SSP" />
+      <p style="font-size:14px; font-weight:bold;">
+        <span id="loadingMsg">Loading page...</span>
+        <span id="waitingForTooLong" style="display:none">This is taking too long, please try again later.
+        <br />
+        Please also check the latest 
+        <a href='http://kezzler.com/sa'>operational status</a>.</span>
+      </p>
+    </div>
+    <div id="mainContent" style="display:none;">
+      <div id="top1">
+        <div style="padding:4px; padding-left:10px;">
+          <img src="/webgui/img/ssp_small.png" alt="Kezzler SSP" height="39" width="100" />
+          <span id="instanceName"></span>
+          <div id="currentOrganizationName"></div>
+        </div>
+        <div id="topmenu" class="yuimenubarnav"></div>
+        <div id="authStatus">
+          <div id="headerLoggedInPanel" style="display:none;">Logged in as: 
+          <img id="cert_auth_img" src="/webgui/img/icons/cert.png" alt="C" height="16" width="16" title="Authenticated by client certificate" style="display:none" />
+          <a href="/webgui/en/security/mypage">
+            <span id="auth_user_name">???</span>
+          </a>&#160;| 
+          <a href="/webgui/en/messaging/list" id="messagesLabel">Messages</a>&#160;| 
+          <a href="#">
+            <label id="timeZoneLabel" for="timeZone">Time zone</label>
+          </a>
+          <input type="text" id="timeZone" style="position: relative; width:250px; height:12px; display:none" />
+          <div style="display:inline;" id="timeZones"></div>&#160;| 
+          <a href="#" id="logoutLink">Log out</a></div>
+          <div id="headerLoggedOutPanel" style="width:100%; text-align:right; display:none;">
+            <a href="/webgui/en/security/login">Log in</a>
+          </div>
+          <div id="languageoptions">
+            <ul>
+              <li>
+                <img src="/webgui/img/icons/languages/en.png" height="11" width="16" alt="en" title="Current language is English" style="border:1px solid #666;" />
+              </li>
+              <li>
+                <img src="/webgui/img/icons/help.png" height="16" width="16" alt="Help" title="Help" id="helpButton" />
+              </li>
+            </ul>
+          </div>
+          <div id="helpPanel">
+            <div class="hd">Kezzler SSP help</div>
+            <div class="bd">
+              <div>
+                <img src="/webgui/img/icons/book_open.png" height="16" width="16" alt="" />
+                <a target="_blank" href="https://kezzlercoding.com/doc/display/sspdoc/Kezzler+SSP+user+guide">User documentation</a>
+              </div>
+              <div>
+                <img src="/webgui/img/icons/page_white_code.png" height="16" width="16" alt="" />
+                <a href="/ssp/ws-doc/index.html">Web-Service documentation</a>
+              </div>
+              <div>
+                <img src="/webgui/img/icons/email_link.png" height="16" width="16" alt="" />
+                <a href="mailto:sspsupport@kezzler.com">Support e-mail</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="center1" style="padding:16px;">
+        <div id="ordersTabs" class="yui-navset">
+          <ul class="yui-nav">
+            <li class="selected">
+              <a href="#orderstab1">
+                <em>My orders</em>
+              </a>
+            </li>
+            <li>
+              <a href="#orderstab2">
+                <em>Search orders</em>
+              </a>
+            </li>
+          </ul>
+          <div class="yui-content">
+            <div id="orderstab1" class="paddedtab">
+              <table class="compact" style="width:100%;margin-bottom:5px;">
+                <tr>
+                  <td>
+                    <table class="compact">
+                      <tr>
+                        <td>
+                          <button id="showNewOrderDialog" class="button">
+                          <img src="/webgui/img/icons/add.png" alt="new order" />
+                          &#160;New order</button>
+                        </td>
+                        <td style="padding-left:50px">Go to order with ID:</td>
+                        <td>
+                          <input id="goToOrderId" />
+                        </td>
+                        <td>
+                          <button id="goToOrder">Go</button>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="float: right;">
+                    <button class="button" id="refresh">
+                      <img src="/webgui/img/icons/arrow_redo.png" alt="Reload" />
+                    </button>
+                  </td>
+                </tr>
+              </table>
+              <p id="filterInfo" style="padding:0; margin:0;"></p>
+              <div id="orderTableWrapper"></div>
+              <div style="padding-top:5px;" id="pagingWrapper"></div>
+            </div>
+            <div id="orderstab2" class="paddedtab">
+              <fieldset>
+                <legend>Filter by metadata 
+                <img src="/webgui/img/icons/help.png" height="16" width="16"
+                title="This field allows you to search by order's metadata. Use * as wildcard. The search requires all search-words to be present in an order to find it." alt="?" />
+                </legend>
+                <table>
+                  <tr>
+                    <td>
+                      <input id="metadataSearchString" />
+                    </td>
+                    <td>
+                      <button id="filterOrdersByMetadata" class="button">Search</button>
+                    </td>
+                  </tr>
+                </table>
+                <span id="filterError" style="color:red" class="ui-helper-hidden">The search string cannot start with any of these characters: *,-,+</span>
+              </fieldset>
+              <fieldset>
+                <legend>Filter by order description 
+                <img src="/webgui/img/icons/help.png" height="16" width="16" title="This field allows you to search by order's description." alt="?" />
+                </legend>
+                <table>
+                  <tr>
+                    <td>
+                      <input id="descriptionSearchString" />
+                    </td>
+                    <td>
+                      <button id="filterOrdersByDescription" class="button">Search</button>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <div id="newOrderDialog" class="yui-pe-content">
+          <div class="hd">New order</div>
+          <div class="bd">
+            <form>
+              <table>
+                <tr>
+                  <td>Order type:</td>
+                  <td>
+                    <select name="type" style="width:140px">
+                      <option value="m">Manufacturing order</option>
+                      <option value="p">Packing order</option>
+                      <option value="s">Shipping order</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Order mode:</td>
+                  <td>
+                    <select name="sectioned" style="width:140px">
+                      <option value="false">Not sectioned</option>
+                      <option value="true">Sectioned</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Short description/name:</td>
+                  <td>
+                    <input name="description" id="descriptionField" />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div id="messageContainer" style="z-index:-1;">&#160;</div>
+        <div id="errorDialog">&#160;</div>
+        <div id="asyncJobProgressPanel">
+          <div class="hd">Asynchronous jobs</div>
+          <div class="bd" style="overflow-x:hidden; overflow-y:auto; width:280px;">
+            <div id="asyncJobProgressBody">&#160;</div>
+          </div>
+        </div>
+      </div>
+      <div id="bottom1">
+        <p style="padding-bottom:10px;">
+        <img style="vertical-align:text-bottom;" src="/webgui/img/icons/information.png" alt="SSP" title="Kezzler SSP 1.0-SNAPSHOT. (revision trunk@ 10372, built Jan 8, 2013 12:18:41 PM)" />
+        Copyright 
+        <a href="http://www.kezzler.com" style="color:#22A">Kezzler AS</a>&#160;2001-2012. 
+        <span style="float:right; padding-right:6px;">
+          <img src="/webgui/img/icons/cog.png" alt="Async jobs" title="Async jobs" id="asyncJobsButton" height="16" width="16" />
+          <span id="asyncJobsCount" style="padding-bottom:5px;">0/0</span>
+        </span>
+        <span style="float:left; padding-left:6px;">
+          <img id="pingClock" src="/webgui/img/icons/clock.png" alt="" />
+          <span id="avgPing">&#160;</span>
+        </span></p>
+      </div>
+    </div>
+    <div id="wait">
+      <div class="hd">Loading, please wait...</div>
+      <div class="bd">
+      <img src="/webgui/img/loading.gif" alt="Loading..." height="19" width="220" />
+      <br />
+      Completed: 
+      <span class="completed">0</span>&#160;of 
+      <span class="all">0</span></div>
+    </div>
+    <script type="text/javascript" src="/ssp/security/authstatus.djs"></script>
+    <script type="text/javascript" src="/webgui/js/stdjs_a1f312ccadbecfd740bd01ff0132020b.js"></script>
+    <script type="text/javascript" src="/webgui/js/i18n_2cc6896bc53e307dbec6074b3175db92.js"></script>
+    <script type="text/javascript" src="/webgui/js/orders_886aa35a95bdfdfe8a6a348b19a2521f.js"></script>
+  </body>
+</html>
