@@ -1,3 +1,5 @@
+#  :warning: **This project is archived**
+
 # Why?
 
 The reason for this project is the lack of fine tuned filtering in the standard filter-mapping rules, like reg-ex or Ant path.
@@ -24,7 +26,7 @@ http://ethlo.com/maven
 
 # Maven artifact
 ```xml
-<dependency>
+<dependency
 	<groupId>com.ethlo.web</groupId>
 	<artifactId>webclient-security</artifactId>
 	<version>1.0-SNAPSHOT</version>
